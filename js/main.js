@@ -5,7 +5,6 @@ function getRandom(min, max) {
     return Math.floor(Math.random() * (max + 1 - min) + min);
   }
 }
-
 function stringLength(str, maxLength) {
   if (str.length <= maxLength) {
     return true;
@@ -13,6 +12,5 @@ function stringLength(str, maxLength) {
     return false;
   }
 }
-
-console.log(getRandom(2, 8));
-console.log(stringLength('erty', 7));
+getRandom(2, 8);
+stringLength('erty', 7);
