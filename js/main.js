@@ -8,7 +8,7 @@ function getRandom(min, max) {
 function stringLength(str, maxLength) {
   if (str.length <= maxLength) {
     return true;
-  } else { 
+  } else {
     return false;
   }
 }
