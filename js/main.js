@@ -42,32 +42,29 @@ const DESCRIPTIONS = [
   'На отдыхе',
 ];
 
-const getRandomArrayElement = (elements) => elements[getRandom(0, elements.length - 1)];
+function getRandomArrayElement(elements) {
+  if (elements.length === 0) {
+    throw new Error('No more elements');
+  }
+  return elements[getRandom(0, elements.length - 1)];
+}
 
 const exclusiveNumber = (elements) => elements.splice(Math.random() * elements.length,1)[0];
 
+const numbersForIds = Array.from({ length: 25 }, (_, i) => i + 1);
 
-const numbersForId = new Array(25);
-for(let i = 0; i < 25; i++) {
-  numbersForId[i] = i + 1;
-}
+const numbersForURLs = numbersForIds.slice(0);
 
-
-const numbersForURL = numbersForId.slice(0);
-
-const messageID = new Array(66666);
-for(let i = 0; i < 66666; i++) {
-  messageID[i] = i + 1;
-}
+const messageIDs = Array.from({ length: 66666 }, (_, i) => i + 1);
 
 const makeComment = () => ({
   message : getRandomArrayElement(MESSAGES),
-  id: exclusiveNumber(messageID),
+  id: exclusiveNumber(messageIDs),
 });
 
 const createPost = () => ({
-  id: exclusiveNumber(numbersForId),
-  url: `photos/${exclusiveNumber(numbersForURL)}.jpg`,
+  id: exclusiveNumber(numbersForIds),
+  url: `photos/${exclusiveNumber(numbersForURLs)}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandom(15, 200),
   comments: Array.from({length: 2}, makeComment),
