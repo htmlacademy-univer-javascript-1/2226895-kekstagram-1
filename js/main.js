@@ -1,3 +1,4 @@
+module5-task1
 import {createPosts} from './data.js';
 
 createPosts();
