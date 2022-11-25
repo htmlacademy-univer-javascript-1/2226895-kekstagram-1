@@ -1,3 +1,4 @@
+import { uploadFileFunc, formSubmit } from './workWithForm.js';
 import {createPosts} from './data.js';
 
 createPosts();
@@ -5,3 +6,6 @@ createPosts();
 console.log(
   createPosts()
 );
+uploadFileFunc();
+formSubmit();
+
