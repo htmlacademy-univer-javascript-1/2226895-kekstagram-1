@@ -1,3 +1,4 @@
+import { uploadFileFunc, formSubmit } from './workWithForm.js';
 import {createPosts} from './data.js';
 import {renderMin} from './rendering';
 import {showFullSize} from './fullSize';
@@ -11,3 +12,6 @@ uploadFileFunc();
 console.log(
   createPosts()
 );
+uploadFileFunc();
+formSubmit();
+
