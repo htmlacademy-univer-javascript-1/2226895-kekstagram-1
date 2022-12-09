@@ -1,78 +1,55 @@
-import {createPosts} from './data.js';
+import {rightEnding} from './util.js';
+
+const ENDINGS = ['комментария', 'комментариев', 'комментариев'];
 
 const bigPicture = document.querySelector('.big-picture');
-const pictures = document.querySelector('.picture');
-const posts = createPosts();
-const showMoreButton = bigPicture.querySelector('.social__comments-loader');
-const commentCount = document.querySelector('.social__comment-count');
-const  numberOfComments = document.querySelector('.comments-count');
+const bigPictureElement = document.querySelector('.big-picture__img img');
+const likesCountElement = document.querySelector('.likes-count');
+const descriptionElement = document.querySelector('.social__caption');
+const commentCountOnPic = document.querySelector('.social__comment-count');
+const commentsLoader = document.querySelector('.social__comments-loader');
+const commentsList = document.querySelector('.social__comments');
+const commentTemplate = document.querySelector('.social__comment');
 
 
-const createComment = (sample, comment, dataComment) => { //создание одного комментария
-  const oneComment = sample.cloneNode(true);
-  oneComment.querySelector('.social__text').textContent = dataComment['message'];
-  oneComment.querySelector('img').src = dataComment['avatar'];
-  oneComment.querySelector('img').alt = dataComment['name'];
-  comment.appendChild(oneComment);
+// создаем комментарий
+const createComments = (comments) => {
+  commentsList.innerHTML = '';
+  const commentsFragment = document.createDocumentFragment();
+  comments.forEach(({avatar, name, message}) => {
+    const commentElement = commentTemplate.cloneNode(true);
+    commentElement.querySelector('.social__picture').src = avatar;
+    commentElement.querySelector('.social__picture').alt = name;
+    commentElement.querySelector('.social__text').textContent = message;
+
+    commentsFragment.appendChild(commentElement);
+  });
+  commentsList.appendChild(commentsFragment);
 };
 
-export const showFullSize = () => {
-  for (let i = 0; i < pictures.length; i++) {
-    pictures[i].addEventListener('click', () => {
-      bigPicture.classList.remove('hidden'); // 1. Удаляем класс hidden
-
-      //2. Данные о фотографии
-      bigPicture.querySelector('.big-picture__img').src = posts[i].url; // адрес изображения
-      bigPicture.querySelector('.likes-count').textContent = posts[i].likes.toString(); // кол-во лайков
-      bigPicture.querySelector('.social__caption').textContent = posts[i].description; //описание
-      bigPicture.querySelector('.comments-count').textContent = posts[i].comments.length.toString(); // кол-во комментариев
-
-      const comment = bigPicture.querySelector('.social__comments'); // куда вставляютя комменты
-      const commentLi = comment.querySelector('li'); // шаблон
-
-      let tempCount = 0;
-
-      // всего комментариев
-      numberOfComments.textContent = posts[i].comments.length.toString();
-
-      if (posts[i].comments.length <= 5) { // если комментов <= 5
-        for (let j = 0; j < posts[i].comments.length; j++) {
-          createComment(commentLi, comment, posts[i].comments[j]);
-        }
-        commentCount.textContent = posts[i].comments.length.toString();
-      } else { // если их > 5, то появляется кнопка и мы печатает первые 5 комментариев
-        showMoreButton.classList.remove('hidden');
-        for (let j = 0; j < 5; j++) {
-          createComment(commentLi, comment, posts[i].comments[j]);
-        }
-        tempCount = 5;
-        commentCount.textContent = tempCount;
-      }
-
-      showMoreButton.addEventListener('click', () => { // при нажатии на кнопку
-        if (tempCount + 5 <= posts[i].comments.length) { // если мы не дошли до конца списка комментариев, то печатаем след 5
-          for (let j = tempCount; j < tempCount + 5; j++) {
-            createComment(commentLi, comment, posts[i].comments[j]);
-          }
-          tempCount += 5; // прибавляется счетчик сколько комментариев уже показали
-          commentCount.textContent = tempCount;
-        } else { // если мы дошли до конца списка и осталось < 5 комментариев
-          for (let j = tempCount; j <= posts[i].comments.length - tempCount; j++) {
-            createComment(commentLi, comment, posts[i].comments[j]);
-            commentCount.textContent = posts[i].comments.length.toString();
-          }
-          showMoreButton.classList.add('hidden');
-        }
-      });
-
-
-      // 3. После открытия окна необходимо спятать блоки
-      document.querySelector('.social__comment-count').classList.add('hidden');
-      document.querySelector('.comments-loader').classList.add('hidden');
-      // 4. Добавить класс modal - open к body
-      document.querySelector('.body').classList.add('modal-open');
-    });
+let comment;
+let tempCount = 0;
+// если есть незагруженные комментарии, то добавляем кнопку загрузить
+const updateComments = () => {
+  if (tempCount === comment.length) {
+    commentsLoader.classList.add('hidden');
+    return;
   }
+  commentsLoader.classList.remove('hidden');
+};
+
+let commentLength;
+const showComments = (from, to) => {
+  tempCount = Math.min(to, comment.length);
+  createComments(comment.slice(from, tempCount));
+  commentCountOnPic.textContent = `${tempCount} из ${commentLength} ${rightEnding(commentLength, ENDINGS)}`;
+  updateComments();
+};
+
+// при нажатии показываем следующие 5 комментариев
+const pressUpdate = (evt) => {
+  evt.preventDefault();
+  showComments(tempCount, tempCount + 5);
 };
 
 // 5. Закрытие окна при esc
@@ -80,6 +57,7 @@ document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape') {
     bigPicture.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
+    commentsLoader.removeEventListener('click', pressUpdate);
   }
 });
 
@@ -88,7 +66,25 @@ const cancel = document.querySelector('.big-picture__cancel');
 cancel.addEventListener('click', () => {
   bigPicture.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
+  commentsLoader.removeEventListener('click', pressUpdate);
 });
 
+// функция демонстрации полного изображения с комментариями
+const showFullSize = (picture) => {
+  bigPicture.classList.remove('hidden');
+  commentCountOnPic.classList.remove('hidden');
+  document.body.classList.add('modal-open');
 
-showFullSize();
+  comment = picture.comments;
+  commentLength = comment.length;
+
+  commentsList.innerHTML = '';
+  bigPictureElement.src = picture.url;
+  bigPictureElement.alt = picture.description;
+  likesCountElement.textContent = picture.likes;
+  descriptionElement.textContent = picture.description;
+  showComments(0, 5);
+  commentsLoader.addEventListener('click', pressUpdate);
+};
+
+export {showFullSize};

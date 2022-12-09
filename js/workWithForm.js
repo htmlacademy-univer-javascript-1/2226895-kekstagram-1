@@ -1,4 +1,4 @@
-import {checkingComments, checkingHashTags} from './validation';
+import {checkingComments, checkingHashTags} from './validation.js';
 
 const uploadFile = document.querySelector('#upload-file');
 const overlay = document.querySelector('.img-upload__overlay');
@@ -71,7 +71,8 @@ commentInput.addEventListener('input', () => {
   commentInput.reportValidity();
 });
 
-
+uploadFileFunc();
+formSubmit();
 export {
   formSubmit,
   showForm,

@@ -40,6 +40,7 @@ const numbersForURLs = numbersForIds.slice(0);
 const messageIDs = Array.from({ length: 66666 }, (_, i) => i + 1);
 
 const makeComment = () => ({
+  avatar: `img/avatar-${getRandom(1, 6)}.svg`,
   message : getRandomArrayElement(MESSAGES),
   id: exclusiveNumber(messageIDs),
 });
@@ -49,7 +50,7 @@ const createPost = () => ({
   url: `photos/${exclusiveNumber(numbersForURLs)}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandom(15, 200),
-  comments: Array.from({length: 2}, makeComment),
+  comments: Array.from({length: 20}, makeComment),
   avatar: `img/avatar-${getRandom(1, 6)}.svg`,
   name: getRandomArrayElement(NAMES),
 });
