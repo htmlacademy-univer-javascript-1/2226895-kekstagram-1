@@ -74,7 +74,6 @@ export const showFullSize = () => {
   }
 };
 
-
 // 5. Закрытие окна при esc
 document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape') {
