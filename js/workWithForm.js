@@ -72,7 +72,6 @@ commentInput.addEventListener('input', () => {
 });
 
 
-
 export {
   formSubmit,
   showForm,
