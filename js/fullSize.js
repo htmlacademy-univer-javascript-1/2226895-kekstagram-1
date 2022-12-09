@@ -15,7 +15,7 @@ const createComment = (sample, comment, dataComment) => { //создание о�
   comment.appendChild(oneComment);
 };
 
-const showFullSize = () => {
+export const showFullSize = () => {
   for (let i = 0; i < pictures.length; i++) {
     pictures[i].addEventListener('click', () => {
       bigPicture.classList.remove('hidden'); // 1. Удаляем класс hidden

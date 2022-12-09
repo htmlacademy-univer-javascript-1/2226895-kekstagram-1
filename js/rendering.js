@@ -4,7 +4,7 @@ const photosTemplate = document.querySelector('#picture').content;
 const photos = createPosts();
 const listFragment = document.createDocumentFragment();
 const photosList = document.querySelector('.pictures');
-const renderMin = () => {
+export const renderMin = () => {
   photos.forEach(({url, likes, comments}) => {
     const onePhoto = photosTemplate.cloneNode(true);
     onePhoto.querySelector('.picture__img').src = url;
