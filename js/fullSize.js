@@ -7,6 +7,7 @@ const showMoreButton = bigPicture.querySelector('.social__comments-loader');
 const commentCount = document.querySelector('.social__comment-count');
 const  numberOfComments = document.querySelector('.comments-count');
 
+
 const createComment = (sample, comment, dataComment) => { //создание одного комментария
   const oneComment = sample.cloneNode(true);
   oneComment.querySelector('.social__text').textContent = dataComment['message'];

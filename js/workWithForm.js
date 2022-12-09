@@ -71,8 +71,6 @@ commentInput.addEventListener('input', () => {
   commentInput.reportValidity();
 });
 
-formSubmit();
-uploadFileFunc();
 
 
 export {
