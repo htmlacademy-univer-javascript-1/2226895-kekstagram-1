@@ -1,4 +1,6 @@
 import {checkingComments, checkingHashTags} from './validation.js';
+import {resetEffect} from './effects.js';
+import {resetScale} from './scale.js';
 
 const uploadFile = document.querySelector('#upload-file');
 const overlay = document.querySelector('.img-upload__overlay');
@@ -12,6 +14,8 @@ function pushEsc(evt) {
 }
 
 function hideForm() {
+  resetEffect();
+  resetScale();
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', pushEsc);
@@ -57,7 +61,6 @@ function formSubmit () {
   });
 }
 
-
 const hashTag = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
 
@@ -73,6 +76,7 @@ commentInput.addEventListener('input', () => {
 
 uploadFileFunc();
 formSubmit();
+
 export {
   formSubmit,
   showForm,

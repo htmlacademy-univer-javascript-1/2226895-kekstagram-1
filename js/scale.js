@@ -4,9 +4,10 @@ const sizeMinus = document.querySelector('.scale__control--smaller');
 
 const imagePrev = document.querySelector('.img-upload__preview');
 
-const min = 25;
-const max = 100;
-const step = 25;
+const MIN = 25;
+const MAX = 100;
+const STEP = 25;
+const DEFAULT_SCALE = 100;
 
 // при нажатии на кнопку увеличения
 sizePlus.addEventListener('click', () => {
@@ -16,8 +17,8 @@ sizePlus.addEventListener('click', () => {
   } else {
     value = Number(sizeNumber.value.substring(0, 2));
   }
-  if (value < max) {
-    value += step;
+  if (value < MAX) {
+    value += STEP;
     imagePrev.style = `transform: scale(${  value / 100  })`;
     sizeNumber.value = `${value  }%`;
   }
@@ -31,9 +32,14 @@ sizeMinus.addEventListener('click', () => {
   } else {
     value = Number(sizeNumber.value.substring(0, 2));
   }
-  if (value > min) {
-    value -= step;
+  if (value > MIN) {
+    value -= STEP;
     imagePrev.style = `transform: scale(${  value / 100  })`;
     sizeNumber.value = `${value  }%`;
   }
 });
+
+export const resetScale = () => {
+  imagePrev.style.transform = `scale(${DEFAULT_SCALE / 100})`;
+  sizeNumber.value = `${DEFAULT_SCALE}%`;
+};

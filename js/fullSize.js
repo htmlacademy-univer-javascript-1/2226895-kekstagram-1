@@ -1,5 +1,7 @@
 import {rightEnding} from './util.js';
 
+const COMMENTS = 5;
+
 const ENDINGS = ['комментария', 'комментариев', 'комментариев'];
 
 const bigPicture = document.querySelector('.big-picture');
@@ -49,7 +51,7 @@ const showComments = (from, to) => {
 // при нажатии показываем следующие 5 комментариев
 const pressUpdate = (evt) => {
   evt.preventDefault();
-  showComments(tempCount, tempCount + 5);
+  showComments(tempCount, tempCount + COMMENTS);
 };
 
 // 5. Закрытие окна при esc
@@ -83,7 +85,7 @@ const showFullSize = (picture) => {
   bigPictureElement.alt = picture.description;
   likesCountElement.textContent = picture.likes;
   descriptionElement.textContent = picture.description;
-  showComments(0, 5);
+  showComments(0, COMMENTS);
   commentsLoader.addEventListener('click', pressUpdate);
 };
 

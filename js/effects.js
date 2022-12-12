@@ -1,149 +1,69 @@
-import nouislider from 'nouislider/src/nouislider';
+import {EFFECTS} from './data.js';
 
-const radioButton = document.querySelector('.effects__radio');
-const imagePrev = document.querySelector('.img-upload__preview');
-const sliderElement = document.querySelector('.effect-level__slider');
-const pictureUploadValueElement = document.querySelector('.effect-level__value');
-const sliderContainerElement = document.querySelector('.img-upload__effect-level');
+const imagePrev = document.querySelector('.img-upload__preview img');
+const form = document.querySelector('.img-upload__form');
+const sliderEffect = document.querySelector('.effect-level__slider');
+const effectValue = document.querySelector('.effect-level__value');
 
-const effects = {
-  // оригинал
-  'effect-none': {
-    name: 'none',
-    filter: '',
-    unit: '',
-    nouislider: {
-      range: {
-        min: 0,
-        max: 100,
-      },
-      step: 1,
-      start: 100,
-      connect: 'lower'
-    },
+const sliderContainer = document.querySelector('.img-upload__effect-level');
+
+const def = EFFECTS[0];
+let chosenEffect = def;
+
+noUiSlider.create(sliderEffect, {
+  range: {
+    min: def.min,
+    max: def.max
   },
-  // Хром
-  'effect-chrome': {
-    name: 'chrome',
-    filter: 'grayscale',
-    unit: '',
-    nouisilder: {
-      range: {
-        min: 0,
-        max: 1,
-      },
-      step: 0.1,
-      start: 1,
-      connect: 'lower'
-    },
-  },
-  // Сепия
-  'effect-marvin': {
-    name: 'marvin',
-    filter: 'invert',
-    unit: '%',
-    nouisilder: {
-      range: {
-        min: 0,
-        max: 100,
-      },
-      step: 1,
-      start: 100,
-      connect: 'lower'
-    },
-  },
+  start: def.max,
+  step: def.step,
+  connect: 'lower',
+});
 
-  // Фобос
-  'effect-phobos': {
-    name: 'phobos',
-    filter: 'blur',
-    unit: 'px',
-    nouisilder: {
-      range: {
-        min: 0,
-        max: 3,
-      },
-      step: 0.1,
-      start: 3,
-      connect: 'lower'
-    },
-  },
-  // Зной
-  'effect-heat': {
-    name: 'heat',
-    filter: 'brightness',
-    unit: '',
-    nouisilder: {
-      range: {
-        min: 1,
-        max: 3,
-      },
-      step: 0.1,
-      start: 3,
-      connect: 'lower'
-    },
-  },
-};
-
-let effectId;
-const changeSlider = () => {
-  pictureUploadValueElement.value = sliderElement.noUiSlider.get();
-  imagePrev.style.filter = `${effects[effectId].filter}(${sliderElement.noUiSlider.get()}${effects[effectId].unit})`;
-};
-
-const changeEffect = (evt) => {
-  effectId = evt.target.getAttribute('id');
-  if (imagePrev.className) {
-    imagePrev.classList.remove(imagePrev.className);
-  }
-  imagePrev.classList.add(`effects__preview--${effects[effectId].name}`);
-  sliderContainerElement.classList.add('hidden');
-  imagePrev.style.filter = '';
-
-  if (effectId !== 'effect-none') {
-    sliderContainerElement.classList.remove('hidden');
-    sliderElement.noUiSlider.updateOptions(effects[effectId].nouisilder, true);
-  }
-};
-
-const createSlider = () => {
-  nouislider.create(sliderElement, {
+const updateSlider = () => {
+  sliderEffect.classList.remove('hidden');
+  sliderContainer.style.display = 'block';
+  sliderEffect.noUiSlider.updateOptions ({
     range: {
-      min: 0,
-      max: 100,
+      min: chosenEffect.min,
+      max: chosenEffect.max
     },
-    step: 1,
-    start: 100,
-    connect: 'lower',
-    format: {
-      to: (value) => {
-        if (Number.isInteger(value)) {
-          return value.toFixed(0);
-        }
-        return value.toFixed(1);
-      },
-      from: function (value) {
-        return parseFloat(value);
-      },
-    },
-  });
-
-  effectId = document.querySelector('.effects__radio:checked').getAttribute('id');
-  radioButton.forEach((element) => element.addEventListener('change', changeEffect));
-  sliderElement.noUiSlider.on('update', changeSlider);
-  sliderContainerElement.classList.add('hidden');
-
+    step: chosenEffect.step,
+    start: chosenEffect.max
+  }, true);
+  if (chosenEffect === def) {
+    sliderEffect.classList.add('hidden');
+    sliderContainer.style.display = 'none';
+  }
 };
 
-const removeSlider = () => {
-  sliderElement.noUiSlider.destroy();
-  radioButton.forEach((element) => element.removeEventListener('change', changeEffect));
+const changeSlider = () => {
+  imagePrev.style.filter = 'none';
+  imagePrev.className = '';
+  effectValue.value = '';
+  if (chosenEffect === def) {
+    return;
+  }
+  const sliderValue = sliderEffect.noUiSlider.get();
+  imagePrev.style.filter = `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
+  imagePrev.classList.add(`effects__preview--${chosenEffect.name}`);
+  effectValue.value = sliderValue;
 };
 
-createSlider();
-removeSlider();
+const onFormChange = (evt) => {
+  if (!evt.target.classList.contains('effects__radio')) {
+    return;
+  }
+  chosenEffect = EFFECTS.find((effect) => effect.name === evt.target.value);
+  updateSlider();
+};
 
+const resetEffect = () => {
+  chosenEffect = def;
+  updateSlider();
+};
 
-export{createSlider, removeSlider};
+form.addEventListener('change', onFormChange);
+sliderEffect.noUiSlider.on('update', changeSlider);
 
-
+export {resetEffect};
