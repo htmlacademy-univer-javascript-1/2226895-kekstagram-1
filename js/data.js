@@ -32,6 +32,61 @@ const DESCRIPTIONS = [
   'На отдыхе',
 ];
 
+const EFFECTS = [
+  // оригинал
+  {
+    name: 'none',
+    min: 0,
+    max: 100,
+    step: 1
+  },
+  // хром
+  {
+    name: 'chrome',
+    style: 'grayscale',
+    min: 0,
+    max: 1,
+    step: 0.1,
+    unit: ''
+  },
+  // сепия
+  {
+    name: 'sepia',
+    style: 'sepia',
+    min: 0,
+    max: 1,
+    step: 0.1,
+    unit: ''
+  },
+  // марвин
+  {
+    name: 'marvin',
+    style: 'invert',
+    min: 0,
+    max: 100,
+    step: 1,
+    unit: '%'
+  },
+  // фобос
+  {
+    name: 'phobos',
+    style: 'blur',
+    min: 0,
+    max: 3,
+    step: 0.1,
+    unit: 'px'
+  },
+  // зной
+  {
+    name: 'heat',
+    style: 'brightness',
+    min: 1,
+    max: 3,
+    step: 0.1,
+    unit: ''
+  }
+];
+
 
 const numbersForIds = Array.from({ length: 25 }, (_, i) => i + 1);
 
@@ -40,6 +95,7 @@ const numbersForURLs = numbersForIds.slice(0);
 const messageIDs = Array.from({ length: 66666 }, (_, i) => i + 1);
 
 const makeComment = () => ({
+  avatar: `img/avatar-${getRandom(1, 6)}.svg`,
   message : getRandomArrayElement(MESSAGES),
   id: exclusiveNumber(messageIDs),
 });
@@ -49,10 +105,10 @@ const createPost = () => ({
   url: `photos/${exclusiveNumber(numbersForURLs)}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandom(15, 200),
-  comments: Array.from({length: 2}, makeComment),
+  comments: Array.from({length: 20}, makeComment),
   avatar: `img/avatar-${getRandom(1, 6)}.svg`,
   name: getRandomArrayElement(NAMES),
 });
 
 const createPosts = () => Array.from({length: 25}, createPost);
-export {createPosts};
+export {createPosts, EFFECTS};

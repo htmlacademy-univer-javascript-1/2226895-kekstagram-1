@@ -1,11 +1,10 @@
-import { uploadFileFunc, formSubmit } from './workWithForm.js';
-import {createPosts} from './data.js';
+import { createPosts } from './data.js';
+import {renderMin} from './rendering.js';
+import './workWithForm.js';
+import './scale.js';
 
-createPosts();
+
+const posts = createPosts();
 // eslint-disable-next-line no-console
-console.log(
-  createPosts()
-);
-uploadFileFunc();
-formSubmit();
-
+console.log(posts);
+renderMin(posts);
