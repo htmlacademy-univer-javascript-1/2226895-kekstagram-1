@@ -1,39 +1,62 @@
-const checkingHashTags = (text) => {
-  // приводим строку к списку
-  const hashtags = text.replace(/\s\s+/g, ' ').trim().split(' ');
-  //состав хэштэга и его длина
+const NUMBER_HASHTAGS = 5;
+const COMMENT_LENGTH = 140;
+const REGEX_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
 
-  const regex = /^#[A-Za-zА-Яа-я0-9]{1,19}$/;
-  if (!(hashtags.every((hashtag) => regex.test(hashtag)))) {
-    return 'Неправильный хэштег';
-  }
-  if (hashtags.length > 5) {
-    return 'Максимальное количество хэштегов равно 5';
-  }
+const formImage = document.querySelector('.img-upload__form');
+const hashtagField = formImage.querySelector('.text__hashtags');
+const commentField = formImage.querySelector('.text__description');
 
-  //проверка символа #
-  const firstSymbol = /^#/;
-  if (!(hashtags.every((hashtag) => firstSymbol.test(hashtag)))) {
-    return 'Хэштег должен начинаться с символа #';
-  }
+// приводим строку к списку
+const createHashtagArray = (value) => value.split(' ');
 
-  //приводим к нижнему регистру
-  const hashtagsLowerCase = hashtags.map((hashtag) => hashtag.toLowerCase());
-  //без дубликатов
-  const uniqueHashtagsLowerCase = new Set(hashtagsLowerCase);
-  if (hashtagsLowerCase.length !== uniqueHashtagsLowerCase.size) {
-    return 'Хэштеги не должны повторяться (регистр букв не учитывается)';
+const isValidHashtag = (value) => {
+  if (!value) {
+    return true;
   }
-  return '';
+  const hashtag = createHashtagArray(value);
+  return hashtag.every((test) => REGEX_HASHTAG.test(test));
 };
 
-const checkingComments = (evtText) => {
-  if (evtText.length > 140) {
-    return 'Длина комментария не может превышать 140 символов';
-  }
-  return '';
+const isValidCount = (value) => {
+  const hashtag = createHashtagArray(value);
+  return hashtag.length <= NUMBER_HASHTAGS;
 };
 
+const isUniqueHashtags = (value) => {
+  const hashtag = createHashtagArray(value);
+  const uniqHashtag = new Set(hashtag);
+  return uniqHashtag.size === hashtag.length;
+};
 
-export { checkingHashTags };
-export { checkingComments };
+const isValidComment = (comment) => comment.length <= COMMENT_LENGTH;
+
+const pristine = new Pristine(formImage, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__field-wrapper__error',
+});
+
+pristine.addValidator(
+  hashtagField,
+  isValidHashtag,
+  'Неправильный хэштег'
+);
+
+pristine.addValidator(
+  hashtagField,
+  isValidCount,
+  'Максимальное количество хэштегов равно 5'
+);
+
+pristine.addValidator(
+  hashtagField,
+  isUniqueHashtags,
+  'Хэштеги не должны повторяться (регистр букв не учитывается)'
+);
+
+pristine.addValidator(
+  commentField,
+  isValidComment,
+  'Длина комментария не может превышать 140 символов'
+);
+export {pristine};

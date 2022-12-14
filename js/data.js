@@ -1,6 +1,4 @@
-import {getRandomArrayElement} from './util.js';
-import {getRandom} from './util.js';
-import {exclusiveNumber} from './util.js';
+import {getRandomArrayElement, getRandom, exclusiveNumber} from './util.js';
 
 const NAMES = [
   'Иван',
