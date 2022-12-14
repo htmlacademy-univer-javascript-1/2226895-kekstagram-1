@@ -1,10 +1,13 @@
-import { createPosts } from './data.js';
 import {renderMin} from './rendering.js';
+import './effects.js';
 import './workWithForm.js';
 import './scale.js';
+import {getData} from './api.js';
+import {addFormAction} from './workWithForm.js';
 
 
-const posts = createPosts();
-// eslint-disable-next-line no-console
-console.log(posts);
-renderMin(posts);
+getData((pictures) => {
+  renderMin(pictures);
+});
+
+addFormAction();
