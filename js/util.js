@@ -38,4 +38,20 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {exclusiveNumber, rightEnding, getRandomArrayElement, showAlert};
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const createRandomArrayFromRange = (min, max, count) => {
+  const result = [];
+  for (let i = 1; i <= count; i++) {
+    result.push(getRandom(min, max));
+  }
+  return result;
+};
+
+export {exclusiveNumber, rightEnding, getRandomArrayElement, showAlert, debounce, createRandomArrayFromRange};
