@@ -4,6 +4,7 @@ import {sendData} from './api.js';
 import {showErrorModal} from './error-upload.js';
 import {showSuccessModal} from './succes-upload.js';
 import {pristine} from './validation.js';
+import {resetFileInput} from './uploadPhoto.js';
 
 const formImage = document.querySelector('.img-upload__form');
 const uploadFile = document.querySelector('#upload-file');
@@ -60,6 +61,7 @@ const unblockSubmitButton = () => {
 function resetUploadForm() {
   formImage.reset();
   onCancelButtonClick();
+  resetFileInput();
 }
 
 const onSubmitForm = (evt) => {
